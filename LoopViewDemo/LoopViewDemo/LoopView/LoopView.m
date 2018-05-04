@@ -52,20 +52,6 @@ static NSString *ID = @"loopCell";
     return self;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    self.collectionView.frame = CGRectMake(0, 0, _frame.size.width, _frame.size.height);
-    
-    CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:self.imageArray.count];
-    self.pageControl.frame = CGRectMake(_frame.size.width - pageControlSize.width - 10, _frame.size.height - pageControlSize.height + 5, pageControlSize.width, pageControlSize.height);
-    //在该方法中设置页码数.在创建pageControl时数组个数为0.
-    self.pageControl.numberOfPages = self.imageArray.count;
-    
-}
-
-
 //初始化collectionView
 - (void)setupCollectionView
 {
@@ -82,7 +68,6 @@ static NSString *ID = @"loopCell";
     
     //注册cell
     [self.collectionView registerClass:[LoopCell class] forCellWithReuseIdentifier:ID];
-    
 }
 
 //初始化pageControll
@@ -91,6 +76,22 @@ static NSString *ID = @"loopCell";
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
     [self addSubview:self.pageControl];
     self.pageControl.hidesForSinglePage = YES;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.collectionView.frame = CGRectMake(0, 0, _frame.size.width, _frame.size.height);
+    
+    CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:self.imageArray.count];
+    self.pageControl.frame = CGRectMake(_frame.size.width - pageControlSize.width - 10, _frame.size.height - pageControlSize.height + 5, pageControlSize.width, pageControlSize.height);
+    //在该方法中设置页码数.在创建pageControl时数组个数为0.
+    self.pageControl.numberOfPages = self.imageArray.count;
+    
+    //一开始置位中间,目的:定时器执行之前可以向左滑动
+    NSIndexPath *midIndexPath =[NSIndexPath indexPathForItem:0 inSection:kMaxSection/2];
+    [self.collectionView scrollToItemAtIndexPath:midIndexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
     
 }
 
@@ -162,11 +163,13 @@ static NSString *ID = @"loopCell";
 
 #pragma mark - scrollView代理方法
 
+//手开始拖动时停止自动滚动
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [self endTimer];
 }
 
+//手离开时继续自动滚动
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     [self startTimer];
@@ -174,6 +177,7 @@ static NSString *ID = @"loopCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    //页码
     self.pageControl.currentPage = (int)(scrollView.contentOffset.x / scrollView.frame.size.width + 0.5) % self.imageArray.count;
 }
 
