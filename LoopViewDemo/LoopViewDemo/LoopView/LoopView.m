@@ -38,7 +38,7 @@ static NSString *ID = @"loopCell";
     if (self = [super initWithFrame:frame])
     {
         _frame = frame;
-                
+        
         //初始化collectionView
         [self setupCollectionView];
         
@@ -62,7 +62,7 @@ static NSString *ID = @"loopCell";
     self.pageControl.frame = CGRectMake(_frame.size.width - pageControlSize.width - 10, _frame.size.height - pageControlSize.height + 5, pageControlSize.width, pageControlSize.height);
     //在该方法中设置页码数.在创建pageControl时数组个数为0.
     self.pageControl.numberOfPages = self.imageArray.count;
-
+    
 }
 
 
@@ -91,7 +91,7 @@ static NSString *ID = @"loopCell";
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
     [self addSubview:self.pageControl];
     self.pageControl.hidesForSinglePage = YES;
-
+    
 }
 
 //初始化定时器
